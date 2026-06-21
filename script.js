@@ -166,7 +166,7 @@ async function refreshTableData() {
     const res = await fetch(`${API_URL}?action=getData`);
     const data = await res.json();
     // Lưu mới nhất lên đầu bằng cách đảo ngược mảng nhận được từ sheet
-    tableData = Array.isArray(data) ? data.reverse() : [];
+    tableData = Array.isArray(data) ? data.filter(item => item && item.code && String(item.code).trim() !== '').reverse() : [];
     renderTable();
   } catch (err) {
     if (statusEl) statusEl.textContent = "❌ Lỗi tải: " + err;
@@ -187,12 +187,12 @@ function renderTable() {
   
   if (!tbody) return;
   
-  let filtered = tableData;
+  let filtered = tableData.filter(item => item && item.code && String(item.code).trim() !== '');
   if (tableSearchQuery) {
     const q = tableSearchQuery.toLowerCase();
-    filtered = tableData.filter(item => 
-      String(item.code).toLowerCase().includes(q) || 
-      String(item.reason).toLowerCase().includes(q)
+    filtered = filtered.filter(item => 
+      String(item.code || '').toLowerCase().includes(q) || 
+      String(item.reason || '').toLowerCase().includes(q)
     );
   }
   
