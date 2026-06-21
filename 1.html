@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @page {
+        size: landscape;
+        margin: 10mm;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .page {
+        position: relative;
+        page-break-after: always;
+        box-sizing: border-box;
+        height: 100%;
+        min-height: 180mm;
+      }
+      .page:last-child {
+        page-break-after: avoid;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .header h3 {
+        margin: 4px 0;
+        font-size: 13px;
+      }
+      .tables {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        text-align: center;
+      }
+      table.data {
+        border-collapse: collapse;
+        width: 48%;
+        font-size: 11px;
+      }
+      th, td {
+        border: 1px solid #333;
+        padding: 4px;
+        text-align: center;
+      }
+      .footer {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+        font-weight: bold;
+      }
+      h2 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 18px;
+      }
+      .textr {
+        padding-top: 6px;
+        font-size: 12px;
+      }
+      .page-number {
+        position: absolute;
+        bottom: 5mm;
+        right: 5mm;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sổ mẫu trang 1 tham chiếu -->
+    <div class="page">
+      <div class="header">
+        <div style="display:flex; text-align: center; justify-content: center;">
+          <div>
+            <h3>CNBC VIETTEL TÂY NINH</h3>
+            <h3>KHO VÙNG LONG AN</h3>
+          </div>
+          <div style="width:15%;"></div>
+          <div>
+            <h3>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h3>
+            <div style="font-weight: bold; font-size: 13px;">Độc lập – Tự do – Hạnh phúc</div>
+          </div>
+        </div>
+        <h2>BIÊN BẢN BÀN GIAO HÀNG</h2>
+        <div class="textr">Hôm nay, .............. tháng .............. năm .............. tại Kho Tổng Long Châu.</div>
+        <div class="textr">Bên giao hàng ..............................................................................................</div>
+        <div class="textr"> - Ông (bà) ...................................................................................................</div>
+        <div class="textr">Bên nhận hàng ..............................................................................................</div>
+        <div class="textr"> - Ông (bà) ...................................................................................................</div>
+        <div class="textr" style="text-align: left; font-weight: bold;">Chúng tôi cùng thống nhất bàn giao các mã bưu gửi theo danh sách như sau :</div>
+      </div>
+
+      <div class="tables">
+        <table class="data">
+          <tr><td><b>STT</b></td><td><b>Mã Đơn</b></td><td><b>Số Kiện</b></td><td><b>Lý Do</b></td></tr>
+          <tr><td>1</td><td>FRK12345678</td><td>1</td><td>Chờ kiểm</td></tr>
+        </table>
+        <table class="data">
+          <tr><td><b>STT</b></td><td><b>Mã Đơn</b></td><td><b>Số Kiện</b></td><td><b>Lý Do</b></td></tr>
+          <tr><td>2</td><td>FRK12345679</td><td>1</td><td>Chờ kiểm</td></tr>
+        </table>
+      </div>
+      
+      <div class="textr" style="margin-top: 15px;">Biên bản này được lập thành 02 bản và có giá trị pháp lý như nhau, 01 bản lưu tại bên nhận, 01 bản đưa bên vận chuyển.</div>
+      <div class="footer">
+        <div>BÊN GIAO HÀNG</div>
+        <div>BÊN NHẬN HÀNG</div>
+      </div>
+      
+      <div class="page-number">Trang 1 / 1</div>
+    </div>
+  </body>
+</html>

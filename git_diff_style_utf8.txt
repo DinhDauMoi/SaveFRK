@@ -1,0 +1,228 @@
+﻿diff --git a/style.css b/style.css
+index 4297d31..01f4148 100644
+--- a/style.css
++++ b/style.css
+@@ -638,6 +638,223 @@ footer {
+   height: 22px;
+ }
+ 
++/* ============ MODERN TABLE ============ */
++.data-table-card {
++  overflow: hidden;
++}
++
++.table-responsive {
++  border-radius: 12px;
++  border: 1.5px solid var(--border-color);
++  background: var(--card-bg);
++}
++
++.modern-table {
++  width: 100%;
++  border-collapse: collapse;
++  text-align: left;
++}
++
++.modern-table th {
++  background: #f8fafc;
++  color: var(--text-muted);
++  font-weight: 700;
++  text-transform: uppercase;
++  font-size: 12px;
++  letter-spacing: 0.5px;
++  padding: 14px 16px;
++  border-bottom: 2px solid var(--border-color);
++}
++
++.modern-table td {
++  padding: 14px 16px;
++  border-bottom: 1px solid var(--border-color);
++  color: var(--text-main);
++  font-size: 14px;
++}
++
++.modern-table tbody tr:last-child td {
++  border-bottom: none;
++}
++
++.modern-table tbody tr {
++  transition: background-color 0.2s;
++}
++
++.modern-table tbody tr:hover {
++  background-color: #f8fafc;
++}
++
++.inline-reason-edit {
++  width: 100%;
++  padding: 8px 12px;
++  border: 1.5px solid var(--primary);
++  border-radius: 6px;
++  font-family: inherit;
++  font-size: 13px;
++  background: #fff;
++  outline: none;
++  color: var(--text-main);
++}
++
++.inline-reason-edit:focus {
++  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
++}
++
++.table-pagination {
++  border-top: 1.5px solid #f1f5f9;
++  padding-top: 16px;
++}
++
++/* ============ SCANNER STYLES ============ */
++/* ============ SCANNER STYLES ============ */
++.pulse-indicator {
++  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
++  animation: pulse-green 1.6s infinite;
++}
++
++@keyframes pulse-green {
++  0% {
++    transform: scale(0.95);
++    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
++  }
++  70% {
++    transform: scale(1);
++    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
++  }
++  100% {
++    transform: scale(0.95);
++    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
++  }
++}
++
++#reader video {
++  width: 100% !important;
++  border-radius: 8px;
++  object-fit: cover;
++  display: block;
++}
++
++#reader__scan_region {
++  background: #0f172a;
++}
++
++/* ============ CAMERA OVERLAY MODAL ============ */
++.camera-modal {
++  position: fixed;
++  inset: 0;
++  z-index: 2000;
++  display: none;
++  align-items: center;
++  justify-content: center;
++  padding: 16px;
++  opacity: 0;
++  transition: opacity 0.25s ease;
++}
++
++.camera-modal.show {
++  display: flex;
++  opacity: 1;
++}
++
++.camera-modal-backdrop {
++  position: absolute;
++  inset: 0;
++  background: rgba(15, 17, 23, 0.85);
++  backdrop-filter: blur(8px);
++  -webkit-backdrop-filter: blur(8px);
++}
++
++.camera-modal-content {
++  position: relative;
++  background: #1e293b;
++  border: 1px solid #334155;
++  border-radius: 20px;
++  width: 100%;
++  max-width: 540px;
++  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
++  overflow: hidden;
++  z-index: 10;
++  transform: scale(0.9);
++  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
++}
++
++.camera-modal.show .camera-modal-content {
++  transform: scale(1);
++}
++
++.camera-modal-header {
++  display: flex;
++  justify-content: space-between;
++  align-items: center;
++  padding: 16px 20px;
++  border-bottom: 1px solid #334155;
++}
++
++.camera-modal-title {
++  color: #f8fafc;
++  font-weight: 700;
++  font-size: 15px;
++  display: flex;
++  align-items: center;
++  gap: 8px;
++}
++
++.camera-modal-close {
++  background: none;
++  border: none;
++  color: #94a3b8;
++  cursor: pointer;
++  padding: 6px;
++  border-radius: 50%;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  transition: all 0.2s;
++}
++
++.camera-modal-close:hover {
++  background: #334155;
++  color: #f8fafc;
++}
++
++.camera-modal-body {
++  padding: 16px;
++  background: #1e293b;
++}
++
++.camera-modal-footer {
++  padding: 14px 20px;
++  background: #0f172a;
++  border-top: 1px solid #334155;
++  text-align: center;
++  color: #34d399;
++  font-weight: 700;
++  font-size: 14px;
++  transition: all 0.2s;
++}
++
++.camera-modal-footer #scannedTextValue {
++  font-family: monospace;
++  font-size: 15px;
++  color: #60a5fa;
++  margin-left: 6px;
++  word-break: break-all;
++}
++
++/* Keyframe for loading spin */
++@keyframes spin {
++  from { transform: rotate(0deg); }
++  to { transform: rotate(360deg); }
++}
++
++/* Scanner Laser Line Animation */
++@keyframes scan-line {
++  0% { top: 2%; }
++  50% { top: 98%; }
++  100% { top: 2%; }
++}
++
+ /* ============ RESPONSIVE ============ */
+ @media (max-width: 480px) {
+   .login-card {
