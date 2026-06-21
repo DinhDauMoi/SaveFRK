@@ -143,10 +143,27 @@
             <div id="reader" style="width: 100%; min-height: 350px;"></div>
           </div>
           <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 8px;">Hỗ trợ: QR Code, Code 128, Code 39, EAN-13, EAN-8, UPC-A, UPC-E, ITF, Data Matrix</p>
-          <div id="scanResultInfo" class="scan-result" style="display: none; padding: 12px; background: #f1f5f9; border-radius: 8px; margin-top: 10px; text-align: center; font-weight: 600; color: var(--primary);">
-            <span>Mã vừa quét: </span>
-            <strong id="scannedTextValue"></strong>
+          <!-- Trạng thái quét -->
+          <div id="scanStatusBar" style="display: none; margin-top: 10px;">
+            <!-- Trạng thái: Đang chờ quét -->
+            <div id="scanStatusWaiting" style="padding: 10px 16px; background: linear-gradient(135deg, #eef2ff, #e0f2fe); border-radius: 10px; text-align: center; font-weight: 600; color: #6366f1; border: 1.5px solid #a5b4fc; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <span class="scan-pulse" style="display: inline-block; width: 10px; height: 10px; background: #6366f1; border-radius: 50%; animation: scanPulse 1.2s ease-in-out infinite;"></span>
+              🔍 Đang chờ quét...
+            </div>
+            <!-- Trạng thái: Hoàn tất -->
+            <div id="scanStatusDone" style="display: none; padding: 10px 16px; background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border-radius: 10px; text-align: center; font-weight: 600; color: #059669; border: 1.5px solid #86efac;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="font-size: 18px;">✅</span>
+                Hoàn tất — <strong id="scannedTextValue" style="color: #047857; font-size: 15px;"></strong>
+              </div>
+            </div>
           </div>
+          <style>
+            @keyframes scanPulse {
+              0%, 100% { opacity: 1; transform: scale(1); }
+              50% { opacity: 0.4; transform: scale(0.7); }
+            }
+          </style>
         </div>
 
         <!-- Card: Tìm Kiểm -->

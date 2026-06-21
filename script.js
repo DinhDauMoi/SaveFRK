@@ -588,6 +588,7 @@ function exportPDF() {
 // ============ CAMERA SCANNER LOGIC (Barcode & QR Code) ============
 let html5QrCode = null;
 let cameraStarting = false; // Chống bấm liên tục gây lỗi
+let scanCooldown = false;   // Chống quét liên tục — chỉ quét 1 lần rồi dừng
 
 // Phát âm thanh bip bíp khi quét mã thành công (Sử dụng Web Audio API không cần tải file nhạc)
 function playScanBeep() {
@@ -610,8 +611,49 @@ function playScanBeep() {
   }
 }
 
+// Hiển thị thanh trạng thái quét
+function showScanStatusBar(visible) {
+  const bar = document.getElementById("scanStatusBar");
+  if (bar) bar.style.display = visible ? "block" : "none";
+}
+
+// Chuyển trạng thái quét: "waiting" = đang chờ quét, "done" = hoàn tất
+function setScanStatus(status) {
+  const waiting = document.getElementById("scanStatusWaiting");
+  const done = document.getElementById("scanStatusDone");
+  if (!waiting || !done) return;
+  
+  if (status === "done") {
+    waiting.style.display = "none";
+    done.style.display = "block";
+  } else {
+    // "waiting" — đang chờ quét
+    waiting.style.display = "flex";
+    done.style.display = "none";
+  }
+}
+
+// Tự động resume scanner sau cooldown
+function autoResumeScanning() {
+  scanCooldown = false;
+  setScanStatus("waiting");
+  
+  // Resume scanner nếu đang bị pause
+  if (html5QrCode) {
+    try {
+      const state = html5QrCode.getState();
+      if (state === Html5QrcodeScannerState.PAUSED) {
+        html5QrCode.resume();
+      }
+    } catch (e) {
+      console.warn("Không thể resume scanner:", e);
+    }
+  }
+}
+
 // Dọn dẹp hoàn toàn instance camera cũ
 async function cleanupCamera() {
+  scanCooldown = false;
   if (html5QrCode) {
     try {
       // Kiểm tra xem scanner có đang chạy không trước khi stop
@@ -661,13 +703,15 @@ async function toggleCameraScan() {
 
 // Bắt đầu quét camera
 async function startCameraScan() {
-  const resultBox = document.getElementById("scanResultInfo");
-  if (resultBox) resultBox.style.display = "none";
-  
+  scanCooldown = false;
   cameraStarting = true;
 
   // Dọn dẹp instance cũ hoàn toàn trước khi tạo mới
   await cleanupCamera();
+  
+  // Hiển thị trạng thái "Đang chờ quét..."
+  showScanStatusBar(true);
+  setScanStatus("waiting");
   
   html5QrCode = new Html5Qrcode("reader", {
     // Hỗ trợ quét cả QR Code và tất cả loại Barcode phổ biến
@@ -698,17 +742,38 @@ async function startCameraScan() {
   };
   
   const onScanSuccess = (decodedText) => {
+    // ⚡ Chống quét liên tục: nếu đang trong cooldown thì bỏ qua
+    if (scanCooldown) return;
+    scanCooldown = true;
+    
+    // Phát bíp 1 lần duy nhất
     playScanBeep();
     
+    // Tạm dừng scanner ngay lập tức để không nhận diện tiếp
+    if (html5QrCode) {
+      try {
+        html5QrCode.pause(/* pauseVideo= */ false); // Pause scan nhưng vẫn hiển thị camera
+      } catch (e) {
+        console.warn("Không thể pause scanner:", e);
+      }
+    }
+    
+    // Hiển thị trạng thái "Hoàn tất"
     const resVal = document.getElementById("scannedTextValue");
     if (resVal) resVal.textContent = decodedText;
-    if (resultBox) resultBox.style.display = "block";
+    setScanStatus("done");
     
+    // Lưu mã vào buffer
     const input = document.getElementById("maDon");
     if (input) {
       input.value = decodedText;
       saveMaDon();
     }
+    
+    // ⏳ Tự động quay lại trạng thái "Đang chờ quét" sau 2 giây
+    setTimeout(() => {
+      autoResumeScanning();
+    }, 2000);
   };
   
   const onScanFailure = (errorMessage) => {
@@ -783,6 +848,9 @@ async function stopCameraScan() {
   const section = document.getElementById("cameraScanSection");
   const btn = document.getElementById("btnToggleCamera");
   if (section) section.style.display = "none";
+  
+  // Ẩn thanh trạng thái quét
+  showScanStatusBar(false);
   
   if (btn) {
     btn.innerHTML = `
