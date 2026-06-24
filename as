@@ -78,7 +78,7 @@ function doGet(e) {
       if (!sheet) return ContentService.createTextOutput("❌ Không tìm thấy sheet!");
       
       const code = e.parameter.code.trim();
-      const newReason = (e.parameter.reason || "").trim();
+      const newReason = (e.parameter.reason || "").trim() || "Nguyên vẹn";
       const newQty = (e.parameter.qty || "").trim();
       const lastRow = sheet.getLastRow();
       
@@ -256,14 +256,14 @@ function handleBatchSave_(ss, postDataContents) {
       if (item && typeof item === 'object') {
         return {
           code: String(item.code || "").trim(),
-          reason: String(item.reason !== undefined ? item.reason : "").trim(),
+          reason: String(item.reason !== undefined && item.reason !== "" ? item.reason : "Nguyên vẹn").trim(),
           qty: String(item.qty !== undefined ? item.qty : "")
         };
       } else {
         const codeStr = String(item).trim();
         return {
           code: codeStr,
-          reason: "",
+          reason: "Nguyên vẹn",
           qty: ""
         };
       }
@@ -457,7 +457,7 @@ function buildHTML_(data, sheetName) {
         </div>
         ` : `
         <div class="header">
-          <h2 style="text-align: center;">BIÊN BẢN BÀN GIAO HÀNG - ${sheetName} (Tiếp theo)</h2>
+          <h2 style="text-align: center;">BIÊN BẢN BÀN GIAO HÀNG</h2>
         </div>
         `}
         

@@ -118,7 +118,7 @@
           <div class="reason-group" style="display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">
               <input type="checkbox" id="useReason" onchange="toggleReasonSelect()" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
-              Ghi chú Lý Do
+              Ghi chú Tình Trạng
             </label>
             <select id="reasonSelect" disabled style="padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 14px; outline: none; background-color: #f8fafc; color: var(--text-main); cursor: not-allowed; transition: all 0.2s;">
               <option value="Móp">Móp</option>
@@ -240,7 +240,7 @@
                   <th style="width: 70px; text-align: center;">STT</th>
                   <th>Mã Vận Đơn</th>
                   <th style="width: 100px; text-align: center;">Số Kiện</th>
-                  <th>Lý Do</th>
+                  <th>Tình Trạng</th>
                   <th style="width: 200px;">Thời Gian</th>
                   <th style="width: 160px; text-align: center;">Hành Động</th>
                 </tr>
@@ -282,7 +282,7 @@
                   <th style="width: 70px; text-align: center; color: #92400e; border-bottom-color: #fcd34d;">STT</th>
                   <th style="color: #92400e; border-bottom-color: #fcd34d;">Mã Vận Đơn</th>
                   <th style="width: 100px; text-align: center; color: #92400e; border-bottom-color: #fcd34d;">Số Kiện</th>
-                  <th style="color: #92400e; border-bottom-color: #fcd34d;">Lý Do</th>
+                  <th style="color: #92400e; border-bottom-color: #fcd34d;">Tình Trạng</th>
                   <th style="width: 200px; color: #92400e; border-bottom-color: #fcd34d;">Thời Gian</th>
                   <th style="width: 160px; text-align: center; color: #92400e; border-bottom-color: #fcd34d;">Hành Động</th>
                 </tr>
@@ -319,8 +319,8 @@
             <input type="number" id="editModalQty" min="1" value="1" />
           </div>
           <div class="edit-modal-field">
-            <label>Lý Do</label>
-            <input type="text" id="editModalReason" placeholder="Nhập lý do..." />
+            <label>Tình Trạng</label>
+            <input type="text" id="editModalReason" placeholder="Nhập tình trạng..." />
           </div>
         </div>
         <div class="edit-modal-footer">

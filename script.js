@@ -1,5 +1,5 @@
 // ⚙️ Dán URL Web App của bạn tại đây
-const API_URL = "https://script.google.com/macros/s/AKfycbwrd3PQb8gr0DDHCkOd3o5zWsUxvf3KiJTrw2ruum33YJLUeg1qwrgP-XNngNFDOMYm/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzOC4jfISvOur23D089XtsR20QT3n4M3ma0h8dZDzLBXpV3w3C7vK8scgFDHv3k23mK/exec";
 
 let buffer = []; // lưu tạm các mã chưa gửi
 let isSyncing = false; // trạng thái đang đồng bộ
@@ -61,7 +61,7 @@ function toggleReasonSelect() {
   }
 }
 
-function saveMaDon() {
+function saveMaDon(preventFocus = false) {
   const input = document.getElementById("maDon");
   if (!input) return;
   const maDon = input.value.trim();
@@ -73,7 +73,11 @@ function saveMaDon() {
   if (isDuplicate) {
     document.getElementById("message").textContent = `❌ Trùng lặp: Mã "${maDon}" đã được quét! Không lưu.`;
     input.value = "";
-    input.focus();
+    if (preventFocus) {
+      input.blur();
+    } else {
+      input.focus();
+    }
     return;
   }
 
@@ -106,12 +110,16 @@ function saveMaDon() {
 
   // Get reason and quantity
   const useReason = document.getElementById("useReason") ? document.getElementById("useReason").checked : false;
-  const reasonVal = useReason ? document.getElementById("reasonSelect").value : "";
+  const reasonVal = useReason ? document.getElementById("reasonSelect").value : "Nguyên vẹn";
   const qtyVal = getSoKien(maDon);
 
   buffer.push({ code: maDon, reason: reasonVal, qty: qtyVal });
   input.value = "";
-  input.focus();
+  if (preventFocus) {
+    input.blur();
+  } else {
+    input.focus();
+  }
   
   if (isTargetFound) {
     document.getElementById("message").textContent = `🎯 TÌM THẤY MÃ TRA CỨU: ${maDon}`;
@@ -237,7 +245,7 @@ function renderTable() {
         `;
       } else {
         qtyCell = `<span style="font-weight: 700; color: var(--text-color);">${item.qty || '1'}</span>`;
-        reasonCell = `<span class="reason-text">${item.reason || '<em style="color:#9ca3af;">Trống</em>'}</span>`;
+        reasonCell = `<span class="reason-text">${item.reason || 'Nguyên vẹn'}</span>`;
         actionButtons = `
           <button onclick="startInlineEdit('${item.code}')" class="btn-secondary" style="width: auto; padding: 6px 12px; font-size: 13px; margin: 0; box-shadow: none;">Sửa</button>
           <button onclick="deleteTableCode('${item.code}')" style="width: auto; padding: 6px 12px; font-size: 13px; background-color: var(--danger); margin: 0; box-shadow: none;">Xóa</button>
@@ -299,7 +307,7 @@ function renderUnusualTable() {
       `;
     } else {
       qtyCell = `<span style="font-weight: 700; color: #92400e;">${item.qty || '1'}</span>`;
-      reasonCell = `<span>${item.reason || '<em style="color:#9ca3af;">Trống</em>'}</span>`;
+      reasonCell = `<span>${item.reason || 'Nguyên vẹn'}</span>`;
       actionButtons = `
         <button onclick="startInlineEdit('${item.code}')" class="btn-secondary" style="width: auto; padding: 6px 12px; font-size: 13px; margin: 0; box-shadow: none;">Sửa</button>
         <button onclick="deleteTableCode('${item.code}')" style="width: auto; padding: 6px 12px; font-size: 13px; background-color: var(--danger); margin: 0; box-shadow: none;">Xóa</button>
@@ -382,7 +390,7 @@ function openEditModal(code) {
   const modal = document.getElementById("editModal");
   document.getElementById("editModalCode").value = item.code;
   document.getElementById("editModalQty").value = item.qty || "1";
-  document.getElementById("editModalReason").value = item.reason || "";
+  document.getElementById("editModalReason").value = item.reason || "Nguyên vẹn";
   
   modal.style.display = "flex";
   // Ngăn scroll body khi modal mở
@@ -403,7 +411,7 @@ function closeEditModal() {
 async function saveEditModal() {
   const code = document.getElementById("editModalCode").value.trim();
   const newQty = document.getElementById("editModalQty").value.trim() || "1";
-  const newReason = document.getElementById("editModalReason").value.trim();
+  const newReason = document.getElementById("editModalReason").value.trim() || "Nguyên vẹn";
   
   if (!code) return;
   
@@ -437,7 +445,7 @@ async function saveInlineReason(code) {
     inputQty = document.getElementById(`editQty_unusual_${cleanCode}`);
   }
   if (!inputReason) return;
-  const newReason = inputReason.value.trim();
+  const newReason = inputReason.value.trim() || "Nguyên vẹn";
   const newQty = inputQty ? inputQty.value.trim() : "1";
   
   document.getElementById("message").textContent = `⏳ Đang lưu thông tin cho mã ${cleanCode}...`;
@@ -713,6 +721,12 @@ async function startCameraScan() {
   showScanStatusBar(true);
   setScanStatus("waiting");
   
+  // Blur the input to hide virtual keyboard on mobile
+  const input = document.getElementById("maDon");
+  if (input) {
+    input.blur();
+  }
+  
   html5QrCode = new Html5Qrcode("reader", {
     // Hỗ trợ quét cả QR Code và tất cả loại Barcode phổ biến
     formatsToSupport: [
@@ -767,7 +781,7 @@ async function startCameraScan() {
     const input = document.getElementById("maDon");
     if (input) {
       input.value = decodedText;
-      saveMaDon();
+      saveMaDon(true); // Pass true to prevent keyboard focus/popup
     }
     
     // ⏳ Tự động quay lại trạng thái "Đang chờ quét" sau 2 giây
