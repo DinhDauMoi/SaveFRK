@@ -1,6 +1,6 @@
 /**
  * HỆ THỐNG LƯU MÃ ĐƠN – XUẤT PDF ĐẸP CHUẨN
- * Phiên bản 2026 - V3 (Quản lý số kiện, lý do tùy chỉnh, bảng dữ liệu phân trang)
+ * Phiên bản 2026 - V3 (Quản lý số kiện, Tình Trạng tùy chỉnh, bảng dữ liệu phân trang)
  */
 
 function getProperty_(key) {
@@ -45,8 +45,8 @@ function doGet(e) {
     const lastCol = sheet.getLastColumn();
     const values = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
     const result = values.map(row => {
-      // Cột cũ: STT (0), Mã Đơn (1), Lý do (2), Thời gian (3)
-      // Cột mới: STT (0), Mã Đơn (1), Số Kiện (2), Lý do (3), Thời gian (4)
+      // Cột cũ: STT (0), Mã Đơn (1), Tình Trạng (2), Thời gian (3)
+      // Cột mới: STT (0), Mã Đơn (1), Số Kiện (2), Tình Trạng (3), Thời gian (4)
       if (lastCol === 4) {
         return {
           stt: row[0],
@@ -68,7 +68,7 @@ function doGet(e) {
     return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
   }
 
-  // --- Cập nhật Lý do và Số Kiện cho mã vận đơn ---
+  // --- Cập nhật Tình Trạng và Số Kiện cho mã vận đơn ---
   if (action === "updateRow" && e.parameter.code) {
     const lock = LockService.getScriptLock();
     try {
@@ -88,10 +88,10 @@ function doGet(e) {
           if (String(codes[i][0]).trim() === code) {
             const lastCol = sheet.getLastColumn();
             if (lastCol === 4) {
-              // Sheet cũ (STT, Mã Đơn, Lý do, Thời gian)
+              // Sheet cũ (STT, Mã Đơn, Tình Trạng, Thời gian)
               sheet.getRange(2 + i, 3).setValue(newReason);
             } else {
-              // Sheet mới (STT, Mã Đơn, Số Kiện, Lý do, Thời gian)
+              // Sheet mới (STT, Mã Đơn, Số Kiện, Tình Trạng, Thời gian)
               if (newQty !== "") {
                 sheet.getRange(2 + i, 3).setValue(newQty);
               }
@@ -161,7 +161,7 @@ function doGet(e) {
     let sheet = ss.getSheetByName(newName);
     if (!sheet) {
       sheet = ss.insertSheet(newName);
-      sheet.appendRow(["STT", "Mã Đơn - Số Chứng Từ", "Số Kiện", "Lý do", "Thời gian"]);
+      sheet.appendRow(["STT", "Mã Đơn - Số Chứng Từ", "Số Kiện", "Tình Trạng", "Thời gian"]);
     }
     setProperty_("currentSheet", newName);
     return ContentService.createTextOutput(`✅ Đang dùng sheet "${newName}"`);
@@ -240,7 +240,7 @@ function handleBatchSave_(ss, postDataContents) {
     let sheet = ss.getSheetByName(sheetName);
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
-      sheet.appendRow(["STT", "Mã Đơn - Số Chứng Từ", "Số Kiện", "Lý do", "Thời gian"]);
+      sheet.appendRow(["STT", "Mã Đơn - Số Chứng Từ", "Số Kiện", "Tình trạng", "Thời gian"]);
     }
 
     const data = JSON.parse(postDataContents || "[]");
@@ -290,13 +290,13 @@ function handleBatchSave_(ss, postDataContents) {
     
     var rows = [];
     if (lastCol === 4) {
-      // Sheet kiểu cũ: STT (0), Mã Đơn (1), Lý do (2), Thời gian (3)
+      // Sheet kiểu cũ: STT (0), Mã Đơn (1), Tình Trạng (2), Thời gian (3)
       rows = uniqueItems.map((item, i) => {
         return [newLastRow + i, item.code, item.reason, now];
       });
       sheet.getRange(newLastRow + 1, 1, rows.length, 4).setValues(rows);
     } else {
-      // Sheet kiểu mới: STT (0), Mã Đơn (1), Số Kiện (2), Lý do (3), Thời gian (4)
+      // Sheet kiểu mới: STT (0), Mã Đơn (1), Số Kiện (2), Tình Trạng (3), Thời gian (4)
       rows = uniqueItems.map((item, i) => {
         const qty = item.qty || getSoKien_(item.code);
         return [newLastRow + i, item.code, qty, item.reason, now];
@@ -448,7 +448,7 @@ function buildHTML_(data, sheetName) {
             </div>
           </div>
           <h2>BIÊN BẢN BÀN GIAO HÀNG</h2>
-          <div class="textr">Hôm nay, .............. tháng .............. năm .............. tại Kho Tổng Long Châu.</div>
+          <div class="textr">Hôm nay, .............. tháng .............. năm .............. lúc ${Utilities.formatDate(new Date(), "Asia/Ho_Chi_Minh", "HH:mm")} tại Kho Tổng Long Châu.</div>
           <div class="textr">Bên giao hàng ..............................................................................................</div>
           <div class="textr"> - Ông (bà) ...................................................................................................</div>
           <div class="textr">Bên nhận hàng ..............................................................................................</div>

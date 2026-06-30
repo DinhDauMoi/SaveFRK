@@ -1,5 +1,5 @@
 // ⚙️ Dán URL Web App của bạn tại đây
-const API_URL = "https://script.google.com/macros/s/AKfycbzOC4jfISvOur23D089XtsR20QT3n4M3ma0h8dZDzLBXpV3w3C7vK8scgFDHv3k23mK/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzwBGhe9tg7jgqDGuyXQRsr2i1AcY-YuyI5UTSXME65FeRc7xT2JUZvF2kifkCeNO-3/exec";
 
 let buffer = []; // lưu tạm các mã chưa gửi
 let isSyncing = false; // trạng thái đang đồng bộ
